@@ -44,7 +44,6 @@ jobs:
           push: true
           tags: ${{ secrets.IMAGE_NAME }}:latest
 
-      # 6️⃣ Deploy to AWS EC2
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -52,6 +51,16 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            echo "🔹 Checking SSH connection..."
+            whoami
+            hostname
+            uptime
+            echo "✅ SSH connection successful!"
+            
+            echo "🔹 Checking Docker..."
+            docker --version || echo "Docker not installed!"
+            
+            echo "🔹 Deploying Docker container..."
             docker pull ${{ secrets.IMAGE_NAME }}:latest
             docker stop springboot || true
             docker rm springboot || true
@@ -60,3 +69,5 @@ jobs:
               --restart always \
               -p 8080:8080 \
               ${{ secrets.IMAGE_NAME }}:latest
+            
+            echo "✅ Deployment finished!"
