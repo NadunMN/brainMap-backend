@@ -61,10 +61,10 @@ jobs:
             docker --version || echo "Docker not installed!"
             
             echo "🔹 Deploying Docker container..."
-            docker pull ${{ secrets.IMAGE_NAME }}:latest
-            docker stop springboot || true
-            docker rm springboot || true
-            docker run -d \
+            sudo docker pull ${{ secrets.IMAGE_NAME }}:latest
+            sudo docker stop springboot || true
+            sudo docker rm springboot || true
+            sudo docker run -d \
               --name springboot \
               --restart always \
               -p 8080:8080 \
